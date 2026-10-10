@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: ErrorDlg
+  title: "[ProductName] Setup"
+  width: 270
+  height: 105
+  firstControl: ErrorText
+  attributes: [Visible, Modal, Minimize, Error]
+
+controls:
+  - name: "Y"
+    type: PushButton
+    text: "&Yes"
+    x: 100
+    y: 80
+    events:
+      - event: EndDialog
+        argument: ErrorYes
+        condition: "1"
+    
+  - name: A
+    type: PushButton
+    x: 100
+    y: 80
+    text: Cancel
+    events:
+      - event: EndDialog
+        argument: ErrorAbort
+        condition: "1"
+
+  - name: C
+    type: PushButton
+    x: 100
+    y: 80
+    text: Cancel
+    events:
+      - event: EndDialog
+        argument: ErrorCancel
+        condition: "1"
+
+  - name: I
+    type: PushButton
+    x: 100
+    y: 80
+    text: "&Ignore"
+    events:
+      - event: EndDialog
+        argument: ErrorIgnore
+        condition: "1"
+    
+  - name: "N"
+    type: PushButton
+    x: 100
+    y: 80
+    text: "&No"
+    events:
+      - event: EndDialog
+        argument: ErrorNo
+        condition: "1"
+
+  - name: O
+    type: PushButton
+    x: 100
+    y: 80
+    text: OK
+    events:
+      - event: EndDialog
+        argument: ErrorOk
+        condition: "1"
+
+  - name: R
+    type: PushButton
+    x: 100
+    y: 80
+    text: "&Retry"
+    events:
+      - event: EndDialog
+        argument: ErrorRetry
+        condition: "1"
+
+  - name: ErrorText
+    type: Text
+    text: Information text
+    x: 48
+    y: 15
+    width: 205
+    height: 60
+    attributes: [Visible, Enabled, NoPrefix]
+
+  - name: ErrorIcon
+    type: Icon
+    x: 15
+    y: 15
+    width: 24
+    height: 24
+    text: OpenMSI_IcoWarning
+    help: Information icon|

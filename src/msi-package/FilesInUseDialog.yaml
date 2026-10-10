@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: FilesInUse
+  title: "[ProductName] Setup"
+  firstControl: Retry
+  defaultControl: Retry
+  cancelControl: Retry
+  
+controls:
+  - type: Text
+    name: Description
+    text: Some files that need to be updated are currently in use. 
+    x: 20
+    y: 23
+    width: 280
+    height: 20
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Text
+    name: Title
+    text: "{\\OpenMSI_Font_Title}Files in Use"
+    x: 15
+    y: 6
+    width: 200
+    height: 15
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Text
+    name: Text
+    text: The following applications are using files that need to be updated by this setup. Close these applications and then click &Retry to continue setup or Exit to exit it.
+    x: 20
+    y: 55
+    width: 330
+    height: 30
+    attributes: [Visible, Enabled]
+
+  - type: Bitmap
+    name: BannerBitmap
+    text: OpenMSI_BmpTopBanner
+    x: 0
+    y: 0
+    width: 370
+    height: 44
+    nextControl: Retry
+
+  - type: Line
+    name: BannerLine
+    x: 0
+    y: 44
+    width: 370
+    height: 0
+
+  - type: ListBox
+    name: List
+    x: 20
+    y: 87
+    width: 330
+    height: 130
+    property: FileInUseProcess
+
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: Exit
+    text: "E&xit"
+    x: 166
+    y: 243
+    nextControl: BannerBitmap
+    events:
+      - event: EndDialog
+        argument: Exit
+        condition: "1"
+
+  - type: PushButton
+    name: Ignore
+    text: "&Ignore"
+    x: 235
+    y: 243
+    nextControl: Exit
+    events:
+      - event: EndDialog
+        argument: Ignore
+        condition: "1"
+
+  - type: PushButton
+    name: Retry
+    text: "&Retry"
+    x: 304
+    y: 243
+    nextControl: Ignore
+    events:
+      - event: EndDialog
+        argument: Retry
+        condition: "1"

@@ -1,0 +1,77 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: DiskCostDlg
+  title: "[ProductName] Setup"
+  firstControl: OK
+  defaultControl: OK
+  cancelControl: OK
+
+controls:
+  - type: Text
+    name: Title
+    text: "{\\OpenMSI_Font_Title}Disk Space Requirements"
+    x: 15
+    y: 6
+    width: 200
+    height: 15
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Text
+    name: Description
+    text: The disk space required for the installation of the selected features.
+    x: 20
+    y: 20
+    width: 280
+    height: 20
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Bitmap
+    name: BannerBitmap
+    text: OpenMSI_BmpTopBanner
+    x: 0
+    y: 0
+    width: 370
+    height: 44
+    nextControl: OK
+
+  - type: PushButton
+    name: OK
+    text: OK
+    x: 304
+    y: 243
+    nextControl: BannerBitmap
+    events:
+      - event: EndDialog
+        argument: Return
+        condition: "1"
+
+  - type: Text
+    name: Text
+    text: Highlighted volumes do not have enough disk space available for selected features. You can either remove some files from the highlighted volumes or select different destination drives.
+    x: 20
+    y: 53
+    width: 330
+    height: 50
+
+  - type: Line
+    name: TopLine
+    x: 0
+    y: 44
+    width: 370
+    height: 0
+
+  - type: VolumeCostList
+    name: VolumeList
+    x: 20
+    y: 100
+    width: 330
+    height: 120
+    text: "{120}{70}{70}{70}{70}"
+
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0

@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: WaitForCostingDlg
+  width: 260
+  height: 85
+  firstControl: Return
+  defaultControl: Return
+  cancelControl: Return
+
+controls:
+  - type: Text
+    name: Text
+    text: Please wait while the installer finishes determining your disk space requirements.
+    x: 48
+    y: 15
+    width: 194
+    height: 30
+
+  - type: PushButton
+    name: Return
+    text: "&Return"
+    x: 102
+    y: 57
+    events:
+      - event: EndDialog
+        argument: Exit
+
+  - type: Icon
+    name: Icon
+    text: OpenMSI_IcoWarning
+    help: Exclamation icon|
+    x: 15
+    y: 15
+    width: 24
+    height: 24

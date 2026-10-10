@@ -1,0 +1,116 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: InstallDirDlg
+  title: "[ProductName] Setup"
+  firstControl: Next
+  defaultControl: Next
+  cancelControl: Cancel
+
+controls:
+  - type: Text
+    name: Title
+    text: "{\\OpenMSI_Font_Title}Destination Folder"
+    x: 15
+    y: 6
+    width: 200
+    height: 15
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Text
+    name: Description
+    text: Click Next to install to the default folder or click Change to choose another.
+    x: 25
+    y: 23
+    width: 280
+    height: 15
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Bitmap
+    name: BannerBitmap
+    text: OpenMSI_BmpTopBanner
+    x: 0
+    y: 0
+    width: 370
+    height: 44
+    nextControl: Folder
+
+  - type: Line
+    name: BannerLine
+    x: 0
+    y: 44
+    width: 370
+    height: 0
+
+  - type: PathEdit
+    name: Folder
+    property: OPENMSI_INSTALLDIR
+    x: 20
+    y: 100
+    width: 320
+    height: 18
+    nextControl: ChangeFolder
+
+  - type: Text
+    name: FolderLabel
+    text: "Install [ProductName] to:"
+    x: 20
+    y: 60
+    width: 290
+    height: 30
+    
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: Next
+    text: "&Next"
+    x: 236
+    y: 243
+    nextControl: Back
+    events:
+      - event: CheckTargetPath
+        argument: "[OPENMSI_INSTALLDIR]"
+      - event: SetTargetPath
+        argument: "[OPENMSI_INSTALLDIR]"
+      - event: NewDialog
+        argument: VerifyReadyDlg
+           
+  - type: PushButton
+    name: Cancel
+    text: "&Cancel"
+    x: 304
+    y: 243
+    nextControl: BannerBitmap
+    events:
+      - event: SpawnDialog
+        argument: CancelDlg
+
+  - type: PushButton
+    name: Back
+    text: "&Back"
+    x: 180
+    y: 243
+    nextControl: Cancel
+    events:
+      - event: NewDialog
+        argument: MaintenanceTypeDlg
+        condition: (Installed AND PATCH) OR OPENMSI_UPGRADE_DETECTED
+      - event: NewDialog
+        argument: WelcomeDlg
+
+  - type: PushButton
+    name: ChangeFolder
+    text: "&Change"
+    x: 20
+    y: 120
+    nextControl: Next
+    events:
+      - event: "[_BrowseProperty]"
+        argument: "[OPENMSI_INSTALLDIR]"
+      - event: SpawnDialog
+        argument: BrowseDlg

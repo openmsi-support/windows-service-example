@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: FatalError
+  firstControl: Finish
+  defaultControl: Finish
+  cancelControl: Finish
+
+controls:
+  - type: Text
+    name: Title
+    text: "{\\OpenMSI_Font_Bigger}Completed the [ProductName] Setup Wizard"
+    x: 135
+    y: 20
+    width: 200
+    height: 60
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Text
+    name: Description
+    text: "[ProductName] Setup Wizard ended prematurely because of an error. Your system has not been modified. To install this program at a later time, run Setup Wizard again. Click the Finish button to exit the Setup Wizard."
+    x: 135
+    y: 70
+    width: 220
+    height: 80
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Bitmap
+    name: BannerBitmap
+    text: OpenMSI_BmpBackground
+    x: 0
+    y: 0
+    width: 370
+    height: 237
+    nextControl: Back
+
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: Cancel
+    text: Cancel
+    x: 304
+    y: 243
+    nextControl: BannerBitmap
+    attributes: [Visible]
+
+  - type: PushButton
+    name: Back
+    text: "&Back"
+    x: 180
+    y: 243
+    nextControl: Finish
+    attributes: [Visible]
+
+  - type: PushButton
+    name: Finish
+    text: "&Finish"
+    x: 236
+    y: 243
+    nextControl: Cancel
+    events:
+      - event: EndDialog
+        argument: Return
+        condition: "1"

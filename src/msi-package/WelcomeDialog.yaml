@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: WelcomeDlg
+  title: "[ProductName] Setup"
+  firstControl: Next
+  defaultControl: Next
+  cancelControl: Cancel
+
+controls:
+  - type: Text
+    name: Title
+    text: "{\\OpenMSI_Font_Bigger}Welcome to the [ProductName] Setup Wizard"
+    x: 135
+    y: 20
+    width: 220
+    height: 60
+
+  - type: Text
+    name: Description
+    text: The Setup Wizard will install [ProductName] on your computer. Click Next to continue or Cancel to exit the Setup Wizard.
+    x: 135
+    y: 80
+    width: 220
+    height: 60
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: NOT Installed OR NOT PATCH
+      - action: Hide
+        condition: Installed AND PATCH
+
+  - type: Text
+    name: PatchDescription
+    text: The Setup Wizard will update [ProductName] on your computer. Click Next to continue or Cancel to exit the Setup Wizard.
+    x: 135
+    y: 80
+    width: 220
+    height: 60
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: Installed AND PATCH
+      - action: Hide
+        condition: NOT Installed OR NOT PATCH
+  
+  - type: Bitmap
+    name: Bitmap
+    text: OpenMSI_BmpBackground
+    x: 0
+    y: 0
+    width: 370
+    height: 234
+    nextControl: Back
+
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: Next
+    text: "&Next"
+    x: 236
+    y: 243
+    width: 56
+    height: 17
+    nextControl: Cancel
+    events:
+      - event: "[OpenMSI_InstallMode]"
+        argument: Update
+        condition: Installed AND PATCH
+      - event: NewDialog
+        argument: InstallDirDlg
+        condition: NOT Installed AND NOT OPENMSI_UPGRADE_DETECTED
+      - event: NewDialog
+        argument: VerifyReadyDlg
+        condition: Installed AND PATCH
+
+  - type: PushButton
+    name: Cancel
+    text: Cancel
+    x: 304
+    y: 243
+    width: 56
+    height: 17
+    nextControl: Bitmap
+    events:
+      - event: SpawnDialog
+        argument: CancelDlg
+
+  - type: PushButton
+    name: Back
+    text: "&Back"
+    x: 180
+    y: 243
+    width: 56
+    height: 17
+    nextControl: Next
+    attributes: [Visible]

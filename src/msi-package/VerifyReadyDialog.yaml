@@ -1,0 +1,401 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: VerifyReadyDlg
+  firstControl: Install
+  defaultControl: Repair
+  cancelControl: Cancel
+  attributes: [Visible, Modal, Minimize, TrackDiskSpace]
+
+controls:
+  - type: Text
+    name: InstallTitle
+    text: "[VERIFYDLG_TITLE]"
+    x: 15
+    y: 15
+    width: 300
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action : Show
+        condition: NOT Installed
+
+  - type: Text
+    name: InstallText
+    text: "[VERIFYDLG_TEXT]"
+    x: 25
+    y: 70
+    width: 320
+    height: 80
+    attributes: [Enabled]
+    conditions:
+      - action : Show
+        condition: NOT Installed
+
+  - type: Text
+    name: ChangeTitle
+    text: "{\\OpenMSI_Font_Title}Ready to change [ProductName]"
+    x: 15
+    y: 15
+    width: 300
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action : Show
+        condition: OpenMSI_InstallMode = "Change"
+
+  - type: Text
+    name: ChangeText
+    text: "Click Change to begin the installation. Click Back to review or change any of your installation settings. Click Cancel to exit the wizard."
+    x: 25
+    y: 70
+    width: 320
+    height: 80
+    attributes: [Enabled]
+    conditions:
+      - action : Show
+        condition: OpenMSI_InstallMode = "Change"
+
+  - type: Text
+    name: RepairTitle
+    text: "{\\OpenMSI_Font_Title}Ready to repair [ProductName]"
+    x: 15
+    y: 15
+    width: 300
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action : Show
+        condition: OpenMSI_InstallMode = "Repair"
+
+  - type: Text
+    name: RepairText
+    text: "Click Repair to repair the installation of [ProductName]. Click Back to review or change any of your installation settings. Click Cancel to exit the wizard."
+    x: 25
+    y: 70
+    width: 320
+    height: 80
+    attributes: [Enabled]
+    conditions:
+      - action : Show
+        condition: OpenMSI_InstallMode = "Repair"
+    
+  - type: Text
+    name: RemoveTitle
+    text: "{\\OpenMSI_Font_Title}Ready to remove [ProductName]"
+    x: 15
+    y: 15
+    width: 300
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action : Show
+        condition: OpenMSI_InstallMode = "Remove"
+
+  - type: Text
+    name: RemoveText
+    text: "Click Remove to remove [ProductName] from your computer. Click Back to review or change any of your installation settings. Click Cancel to exit the wizard."
+    x: 25
+    y: 70
+    width: 320
+    height: 80
+    attributes: [Enabled, NoPrefix]
+    conditions:
+      - action : Show
+        condition: OpenMSI_InstallMode = "Remove"
+    
+  - type: Text
+    name: UpdateTitle
+    text: "{\\OpenMSI_Font_Title}Ready to update [ProductName]"
+    x: 15
+    y: 15
+    width: 300
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action : Show
+        condition: OpenMSI_InstallMode = "Update"
+
+  - type: Text
+    name: UpdateText
+    text: "Click Update to update [ProductName] from your computer. Click Back to review or change any of your installation settings. Click Cancel to exit the wizard."
+    x: 25
+    y: 70
+    width: 320
+    height: 80
+    attributes: [Enabled, NoPrefix]
+    conditions:
+      - action : Show
+        condition: OpenMSI_InstallMode = "Update"
+
+  - type: Line
+    name: BannerLine
+    x: 0
+    y: 44
+    width: 370
+    height: 0
+
+  - type: Line
+    name: BotttomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: Bitmap
+    name: BannerBitmap
+    text: OpenMSI_BmpTopBanner
+    x: 0
+    y: 0
+    nextControl: Install
+    width: 370
+    height: 44
+
+  - type: PushButton
+    name: Install
+    text: "[VERIFYDLG_BUTTON]"
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: InstallNoShield
+    attributes: [ElevationShield]
+    conditions:
+      - action: Default
+        condition: NOT Installed
+      - action: Enable
+        condition: NOT Installed
+      - action: Show
+        condition: NOT Installed AND ALLUSERS
+    events:
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace <> 1
+      - event: SpawnDialog
+        argument: OutOfRbDiskDlg
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+      - event: SpawnDialog
+        argument: OutOfDiskDlg
+        condition: (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
+      - event: EnableRollback
+        argument: "False"
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+
+  - type: PushButton
+    name: Remove
+    text: "&Remove"
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: RemoveNoShield
+    attributes: [Stretched, FirstImage, ElevationShield]
+    conditions:
+      - action: Enable
+        condition: OpenMSI_InstallMode = "Remove"
+      - action: Show
+        condition: OpenMSI_InstallMode = "Remove" AND ALLUSERS
+    events:
+      - event: Remove
+        argument: All
+        condition: OutOfDiskSpace <> 1
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace <> 1
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+      - event: SpawnDialog
+        argument: OutOfRbDiskDlg
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)
+      - event: SpawnDialog
+        argument: OutOfDiskDlg
+        condition: (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
+      - event: EnableRollback
+        argument: "False"
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+      
+
+  - type: PushButton
+    name: Cancel
+    text: Cancel
+    x: 304
+    y: 243
+    width: 56
+    height: 17
+    nextControl: Back
+    events:
+      - event: SpawnDialog
+        argument: CancelDlg
+        condition: "1"
+  
+  - type: PushButton
+    name: InstallNoShield
+    text: "[VERIFYDLG_BUTTON]"
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: Change
+    attributes: []
+    conditions:
+      - action: Default
+        condition: NOT Installed
+      - action: Enable
+        condition: NOT Installed
+      - action: Show
+        condition: NOT Installed AND NOT ALLUSERS
+    events:
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace <> 1
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+      - event: SpawnDialog
+        argument: OutOfRbDiskDlg
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)
+      - event: SpawnDialog
+        argument: OutOfDiskDlg
+        condition: (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
+      - event: EnableRollback
+        argument: "False"
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+
+  - type: PushButton
+    name: Change
+    text: "&Change"
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: ChangeNoShield
+    attributes: [Stretched, FirstImage, ElevationShield]
+    conditions:
+      - action: Default
+        condition: OpenMSI_InstallMode = "Change"
+      - action: Enable
+        condition: OpenMSI_InstallMode = "Change"
+      - action: Show
+        condition: OpenMSI_InstallMode = "Change" AND ALLUSERS AND (ADDLOCAL OR REMOVE)
+    events:
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace <> 1
+      - event: SpawnDialog
+        argument: OutOfRbDiskDlg
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+      - event: EnableRollback
+        argument: "False"
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+      - event: SpawnDialog
+        argument: OutOfDiskDlg
+        condition: (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
+
+  - type: PushButton
+    name: ChangeNoShield
+    text: "&Change"
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: Repair
+    attributes: []
+    conditions:
+      - action: Default
+        condition: OpenMSI_InstallMode = "Change"
+      - action: Enable
+        condition: OpenMSI_InstallMode = "Change"
+      - action: Show
+        condition: OpenMSI_InstallMode = "Change" AND (NOT ALLUSERS OR (NOT ADDLOCAL AND NOT REMOVE))
+  
+  - type: PushButton
+    name: Repair
+    text: Re&pair
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: Remove
+    attributes: []
+    conditions:
+      - action: Default
+        condition: OpenMSI_InstallMode = "Repair"
+      - action: Enable
+        condition: OpenMSI_InstallMode = "Repair"
+      - action: Show
+        condition: OpenMSI_InstallMode = "Repair"
+  
+  - type: PushButton
+    name: RemoveNoShield
+    text: "&Remove"
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: Update
+    attributes: []
+    conditions:
+      - action: Enable
+        condition: OpenMSI_InstallMode = "Remove"
+      - action: Show
+        condition: OpenMSI_InstallMode = "Remove" AND NOT ALLUSERS
+  
+  - type: PushButton
+    name: Update
+    text: "&Update"
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: UpdateNoShield
+    attributes: [Stretched, FirstImage, ElevationShield]
+    conditions:
+      - action: Enable
+        condition: OpenMSI_InstallMode = "Update"
+      - action: Show
+        condition: OpenMSI_InstallMode = "Update" AND ALLUSERS
+  
+  - type: PushButton
+    name: UpdateNoShield
+    text: "&Update"
+    x: 212
+    y: 243
+    width: 80
+    height: 17
+    nextControl: Cancel
+    attributes: []
+    conditions:
+      - action: Enable
+        condition: OpenMSI_InstallMode = "Update"
+      - action: Show
+        condition: OpenMSI_InstallMode = "Update" AND NOT ALLUSERS
+  
+  - type: PushButton
+    name: Back
+    text: "&Back"
+    x: 156
+    y: 243
+    width: 56
+    height: 17
+    nextControl: BannerBitmap
+    attributes: [Visible, Enabled]
+    conditions:
+      - action: Default
+        condition: OpenMSI_InstallMode = "Remove"
+    events:
+      - event: NewDialog
+        argument: InstallDirDlg
+        condition: (NOT Installed AND NOT OPENMSI_UPGRADE_DETECTED) OR PREVIOUSINSTALLFOLDER=""
+      - event: NewDialog
+        argument: ConfigurationDlg
+        condition: ((Installed AND PATCH) OR OPENMSI_UPGRADE_DETECTED) AND PREVIOUSINSTALLFOLDER<>""
+      - event: NewDialog
+        argument: MaintenanceTypeDlg
+        condition: Installed AND NOT PATCH

@@ -1,0 +1,209 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: ProgressDlg
+  firstControl: Cancel
+  defaultControl: Cancel
+  cancelControl: Cancel
+  attributes: [Visible, Minimize]
+
+controls:
+  - type: Text
+    name: TitleInstalling
+    text: "[PROGRESSDLG_TITLE]"
+    x: 20
+    y: 15
+    width: 330
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: NOT Installed OR (Installed AND (RESUME OR Preselected) AND NOT PATCH)
+
+  - type: Text
+    name: TextInstalling
+    text: "[PROGRESSDLG_TEXT]"
+    x: 20
+    y: 65
+    width: 330
+    height: 35
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: NOT Installed OR (Installed AND (RESUME OR Preselected) AND NOT PATCH)
+
+  - type: Text
+    name: TitleChanging
+    text: "{\\OpenMSI_Font_Title}Changing [ProductName]"
+    x: 20
+    y: 15
+    width: 330
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: OpenMSI_InstallMode = "Change"
+
+  - type: Text
+    name: TextChanging
+    text: Please wait while the Setup Wizard changes [ProductName].
+    x: 20
+    y: 65
+    width: 330
+    height: 35
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: OpenMSI_InstallMode = "Change"
+        
+  - type: Text
+    name: TitleRepairing
+    text: "{\\OpenMSI_Font_Title}Repairing [ProductName]"
+    x: 20
+    y: 15
+    width: 330
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: OpenMSI_InstallMode = "Repair"
+
+  - type: Text
+    name: TextRepairing
+    text: Please wait while the Setup Wizard repairs [ProductName].
+    x: 20
+    y: 65
+    width: 330
+    height: 35
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: OpenMSI_InstallMode = "Repair"
+
+  - type: Text
+    name: TitleRemoving
+    text: "{\\OpenMSI_Font_Title}Removing [ProductName]"
+    x: 20
+    y: 15
+    width: 330
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: OpenMSI_InstallMode = "Remove"
+
+  - type: Text
+    name: TextRemoving
+    text: Please wait while the Setup Wizard removes [ProductName].
+    x: 20
+    y: 65
+    width: 330
+    height: 35
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: OpenMSI_InstallMode = "Remove"
+
+  - type: Text
+    name: TitleUpdating
+    text: "{\\OpenMSI_Font_Title}Updating [ProductName]"
+    x: 20
+    y: 15
+    width: 330
+    height: 15
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: OpenMSI_InstallMode = "Update"
+
+  - type: Text
+    name: TextUpdating
+    text: Please wait while the Setup Wizard updates [ProductName].
+    x: 20
+    y: 65
+    width: 330
+    height: 35
+    attributes: [Enabled, NoPrefix, Transparent]
+    conditions:
+      - action: Show
+        condition: OpenMSI_InstallMode = "Update"
+
+  - type: Bitmap
+    name: BannerBitmap
+    text: OpenMSI_BmpTopBanner
+    x: 0
+    y: 0
+    width: 370
+    height: 44
+    nextControl: Back
+
+  - type: Line
+    name: BannerLine
+    x: 0
+    y: 44
+    width: 370
+    height: 0
+
+  - type: Text
+    name: ActionText
+    x: 70
+    y: 100
+    width: 285
+    height: 10
+    attributes: [Visible, Enabled]
+    eventMappings:
+      - event: ActionText
+        attribute: Text
+
+  - type: ProgressBar
+    name: ProgressBar
+    text: Progress done
+    x: 20
+    y: 115
+    width: 330
+    height: 10
+    eventMappings:
+      - event: SetProgress
+        attribute: Progress
+
+  - type: Text
+    name: StatusLabel
+    text: "Status:"
+    x: 20
+    y: 100
+    width: 50
+    height: 10
+        
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: Next
+    text: "&Next"
+    x: 236
+    y: 243
+    nextControl: Cancel
+    attributes: [Visible]
+    
+  - type: PushButton
+    name: Cancel
+    text: "&Cancel"
+    x: 304
+    y: 243
+    nextControl: BannerBitmap
+    attributes: [Visible, Enabled]
+    events:
+      - event: SpawnDialog
+        argument: CancelDlg
+
+  - type: PushButton
+    name: Back
+    text: "&Back"
+    x: 180
+    y: 243
+    nextControl: Next
+    attributes: [Visible]

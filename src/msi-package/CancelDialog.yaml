@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: CancelDlg
+  title: "[ProductName] Setup"
+  width: 260
+  height: 85
+  firstControl: "No"
+  defaultControl: "No"
+  cancelControl: "No"
+
+controls:
+  - name: "No"
+    type: PushButton
+    x: 132
+    y: 57
+    text: "&No"
+    events:
+      - event: EndDialog
+        argument: Return
+        condition: "1"
+  
+  - name: "Yes"
+    type: PushButton
+    x: 72
+    y: 57
+    text: "&Yes"
+    events:
+      - event: EndDialog
+        argument: Exit
+        condition: "1"
+
+  - name: Text
+    type: Text
+    text: "Are you sure you want to cancel the installation?"
+    x: 48
+    y: 15
+    width: 194
+    height: 30
+    attributes: [Visible, Enabled, NoPrefix]
+
+  - name: Icon
+    type: Icon
+    text: OpenMSI_IcoInfo
+    x: 15
+    y: 15
+    width: 24
+    height: 24
+    help: Information icon|
+    attributes: [Visible]
+    

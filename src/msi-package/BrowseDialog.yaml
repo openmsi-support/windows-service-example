@@ -1,0 +1,167 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: BrowseDlg
+  firstControl: PathEdit
+  defaultControl: Ok
+  cancelControl: Cancel
+
+controls:
+  - type: Text
+    name: Title
+    text: "{\\OpenMSI_Font_Title}Change destination folder"
+    x: 15
+    y: 6
+    width: 200
+    height: 15
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Text
+    name: Descritption
+    text: "Browse to the destination folder"
+    x: 25
+    y: 23
+    width: 280
+    height: 15
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Bitmap
+    name: BannerBitmap
+    text: OpenMSI_BmpTopBanner
+    x: 0
+    y: 0
+    width: 370
+    height: 44
+    nextControl: PathEdit
+    
+  - type: PathEdit
+    name: PathEdit
+    text: "Browse to the destination folder"
+    x: 25
+    y: 202
+    width: 320
+    height: 18
+    property: _BrowseProperty
+    nextControl: Ok
+
+  - type: Line
+    name: BannerLine
+    x: 0
+    y: 44
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: FolderUp
+    text: OpenMSI_BmpFolderUp
+    x: 298
+    y: 55
+    width: 19
+    height: 19
+    help: Up one level|
+    nextControl: NewFolder
+    attributes: [Visible, Enabled, Bitmap, FixedSize]
+    events:
+      - event: DirectoryListUp
+        argument: "0"
+        condition: "1"
+
+  - type: PushButton
+    name: NewFolder
+    text: OpenMSI_BmpFolderNew
+    x: 325
+    y: 55
+    width: 19
+    height: 19
+    help: Create a new folder|
+    nextControl: DirectoryList
+    attributes: [Visible, Enabled, Bitmap, FixedSize]
+    events:
+      - event: DirectoryListNew
+        argument: "0"
+        condition: "1"
+
+  - type: Text
+    name: ComboLabel
+    text: "&Look in:"
+    x: 25
+    y: 58
+    width: 44
+    height: 10
+    nextControl: DirectoryCombo
+    attributes: [Visible, Enabled]
+
+  - type: DirectoryCombo
+    name: DirectoryCombo
+    x: 70
+    y: 55
+    width: 220
+    height: 80
+    property: _BrowseProperty
+    nextControl: FolderUp
+    attributes: [Visible, Enabled, Indirect, FixedVolume, RemoteVolume]
+    eventMappings:
+      - event: IgnoreChange
+        attribute: IgnoreChange
+
+  - type: DirectoryList
+    name: DirectoryList
+    x: 25
+    y: 83
+    width: 320
+    height: 98
+    property: _BrowseProperty
+    nextControl: PathLabel
+
+  - type: Text
+    name: PathLabel
+    text: "&Folder name:"
+    x: 25
+    y: 190
+    width: 320
+    height: 10
+    nextControl: BannerBitmap
+    attributes: [Visible, Enabled]
+
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: Cancel
+    text: Cancel
+    x: 304
+    y: 243
+    width: 56
+    height: 17
+    nextControl: ComboLabel
+    events:
+      - event: Reset
+        argument: "0"
+        condition: "1"
+      - event: EndDialog
+        argument: Return
+        condition: "1"
+
+  - type: PushButton
+    name: Ok
+    text: Ok
+    x: 240
+    y: 243
+    width: 56
+    height: 17
+    nextControl: Cancel
+    events:
+      - event: CheckTargetPath
+        argument: "[OPENMSI_INSTALLDIR]"
+        condition: "1"
+      - event: SetTargetPath
+        argument: "[_BrowseProperty]"
+        condition: "1"
+      - event: EndDialog
+        argument: Return
+        condition: "1"
+

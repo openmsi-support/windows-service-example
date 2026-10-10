@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: OutOfDiskDlg
+  firstControl: OK
+  defaultControl: OK
+  cancelControl: OK
+
+controls:
+  - type: Text
+    name: Title
+    text: "{\\OpenMSI_Font_Title}Out of Disk Space"
+    x: 15
+    y: 6
+    width: 340
+    height: 15
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Text
+    name: Description
+    text: Disk space required for the installation exceeds available disk space.
+    x: 20
+    y: 20
+    width: 280
+    height: 20
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Bitmap
+    name: BannerBitmap
+    text: OpenMSI_BmpTopBanner
+    x: 0
+    y: 0
+    width: 370
+    height: 44
+    nextControl: OK
+
+  - type: Line
+    name: BannerLine
+    x: 0
+    y: 44
+    width: 370
+    height: 0
+
+  - type: Text
+    name: Text
+    text: The highlighted volumes do not have enough disk space available for the current installation. You can remove some files from the highlighted volumes or select a different destination drive.
+    x: 20
+    y: 53
+    width: 330
+    height: 60
+
+  - type: VolumeCostList
+    name: VolumeList
+    text: "{120}{70}{70}{70}{70}"
+    x: 20
+    y: 120
+    width: 330
+    height: 100
+
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: OK
+    text: "OK"
+    x: 304
+    y: 243
+    nextControl: BannerBitmap    
+    events:
+      - event: EndDialog
+        argument: Return

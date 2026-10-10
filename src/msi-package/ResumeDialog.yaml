@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-dialog-v1.schema.json
+
+dialog:
+  name: ResumeDlg
+  firstControl: Install
+  defaultControl: InstallNoShield
+  cancelControl: Cancel
+
+controls:
+  - type: Text
+    name: Title
+    text: "{\\OpenMSI_Font_Bigger}Resuming the [ProductName] Setup Wizard"
+    x: 135
+    y: 20
+    width: 220
+    height: 60
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Text
+    name: Description
+    text: The Setup Wizard will complete the installation of [ProductName] on your computer. Click Install to continue or Cancel to exit the Setup Wizard.
+    x: 135
+    y: 80
+    width: 220
+    height: 60
+    attributes: [Visible, Enabled, NoPrefix, Transparent]
+
+  - type: Bitmap
+    name: Bitmap
+    text: OpenMSI_BmpBackground
+    x: 0
+    y: 0
+    width: 370
+    height: 234
+    nextControl: Back
+
+  - type: Line
+    name: BottomLine
+    x: 0
+    y: 234
+    width: 370
+    height: 0
+
+  - type: PushButton
+    name: Install
+    text: "&Install"
+    x: 212
+    y: 243
+    width: 80
+    nextControl: InstallNoShield
+    attributes: [Enabled, ElevationShield]
+    conditions:
+      - action: Show
+        condition: ALLUSERS
+    events:
+      - event: SpawnWaitDialog
+        argument: WaitForCostingDlg
+        condition: 1 OR CostingComplete = 1
+
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace <> 1
+
+      - event: SpawnDialog
+        argument: OutOfRbDiskDlg
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)
+
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+
+      - event: EnableRollback
+        argument: "False"
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+
+      - event: SpawnDialog
+        argument: OutOfDiskDlg
+        condition: (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
+    
+  - type: PushButton
+    name: InstallNoShield
+    text: "&Install"
+    x: 212
+    y: 243
+    width: 80
+    nextControl: Cancel
+    attributes: [Enabled]
+    conditions:
+      - action: Show
+        condition: NOT ALLUSERS
+    events:
+      - event: SpawnWaitDialog
+        argument: WaitForCostingDlg
+        condition: 1 OR CostingComplete = 1
+
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace <> 1
+
+      - event: SpawnDialog
+        argument: OutOfRbDiskDlg
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND (PROMPTROLLBACKCOST="P" OR NOT PROMPTROLLBACKCOST)
+
+      - event: EndDialog
+        argument: Return
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+
+      - event: EnableRollback
+        argument: "False"
+        condition: OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 0 AND PROMPTROLLBACKCOST="D"
+
+      - event: SpawnDialog
+        argument: OutOfDiskDlg
+        condition: (OutOfDiskSpace = 1 AND OutOfNoRbDiskSpace = 1) OR (OutOfDiskSpace = 1 AND PROMPTROLLBACKCOST="F")
+    
+  - type: PushButton
+    name: Cancel
+    text: "&Cancel"
+    x: 304
+    y: 243
+    nextControl: Bitmap
+    events:
+      - event: SpawnDialog
+        argument: CancelDlg
+
+  - type: PushButton
+    name: Back
+    text: "&Back"
+    x: 156
+    y: 243
+    nextControl: Install
+    attributes: [Visible]

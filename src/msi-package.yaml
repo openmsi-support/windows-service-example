@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://openmsi.dev/schemas/openmsi-package-v1.schema.json
+package:
+  productName: WindowsServiceExample
+  manufacturer: John Doe
+  description: A simple Windows Service example
+  version: 1.0.0
+  productCode: fdb96b96-8b1c-4021-b9f4-3cd19cc8e67e
+  upgradeCode: d9e86ff3-9a68-4b86-b351-860c65a4290b
+  productIconSource: msi-package\assets\demoappmulti.ico
+  
+dialogs:
+  - source: msi-package
+    
+assets:
+  - name: OpenMSI_BmpTopBanner
+    source: msi-package\assets\top-banner-370x44.bmp
+  - name: OpenMSI_BmpBackground
+    source: msi-package\assets\background-370x270.bmp
+  - name: OpenMSI_IcoInfo
+    source: msi-package\assets\icon-info.ico
+  - name: OpenMSI_IcoWarning
+    source: msi-package\assets\icon-warn.ico
+  - name: OpenMSI_BmpFolderNew
+    source: msi-package\assets\folder-new.bmp
+  - name: OpenMSI_BmpFolderUp
+    source: msi-package\assets\folder-up.bmp
+
+files:
+  - source: bin\release\net10.0\publish\win-x64
+    installFolder: true
+
+services:
+  - name: WindowsServiceExample
+    displayName: Windows Service Example
+    description: A simple Windows Service example
+    start: auto
+    account: LocalSystem
+    executable: WindowsServiceExample.exe
